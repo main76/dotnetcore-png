@@ -13,6 +13,9 @@ bin/
 obj/
 project.lock.json
 
+# VSCode Individual Launch Configuration
+.vscode/
+
 # Windows Installer files
 *.cab
 *.msi
