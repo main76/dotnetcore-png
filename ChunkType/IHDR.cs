@@ -4,6 +4,9 @@ using Masteryu.Extension;
 
 namespace Masteryu.Png
 {
+    /// <summary>
+    /// IHDR Must be the First Chunk of a PNG File
+    /// </summary>
     public class IHDR : ChunkData
     {
         private byte[] bytes;

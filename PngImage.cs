@@ -4,6 +4,9 @@ using System.IO;
 
 namespace Masteryu.Png
 {
+    /// <summary>
+    /// class to describe a PNG file
+    /// </sumary>
     public sealed class PngImage
     {
         private readonly byte[] chunkBytes;

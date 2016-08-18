@@ -98,6 +98,9 @@ namespace Masteryu.Png
             return new UnknownData(buf, offset, length);
         }
 
+        /// <summary>
+        /// Use this temporarily
+        /// </summary>
         private class UnknownData : ChunkData
         {
             private readonly int length;
