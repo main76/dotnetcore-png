@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Masteryu.Png
@@ -41,7 +42,8 @@ namespace Masteryu.Png
             const string _4spc = "    "; 
             string space = _4spc;
             Type dtype = GetType();
-            var pInfos = dtype.GetProperties();
+            var pInfos = dtype.GetProperties()
+                         .Where(p => p.Name != nameof(DebuggerView)).ToArray();
             int pl = pInfos.Length;
             string rtn = string.Empty;
 
@@ -55,8 +57,6 @@ namespace Masteryu.Png
             for (int i = 0; i < pl; i++)
             {
                 var pInfo = pInfos[i];
-                if (pInfo.Name == nameof(DebuggerView))
-                    continue;
                 
                 object obj = pInfo.GetValue(this);
                 string valueString;
@@ -92,7 +92,9 @@ namespace Masteryu.Png
             switch (type)
             {
                 case ChunkType.IHDR:
-                    return new IHDR(buf, offset);
+                    return new IHDR(buf, offset, length);
+                case ChunkType.sRGB:
+                    return new sRGB(buf, offset, length);
             }
 
             return new UnknownData(buf, offset, length);

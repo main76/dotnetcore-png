@@ -8,6 +8,7 @@ namespace Masteryu.Png
         // Each enum value is precalculated, for example:
         // IHDR = ((int)'I' << 24) + ((int)'H' << 16) + ((int)'D' << 8) + (int)'R';
         // Except NULL, of course.
+        
         #region Critical chunks
 
         IHDR = 1229472850,

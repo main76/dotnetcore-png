@@ -189,9 +189,9 @@ namespace Masteryu.Png
             }
         }
 
-        public IHDR(byte[] buf, int offset) : base(buf, offset)
+        public IHDR(byte[] buf, int offset, int length) : base(buf, offset)
         {
-
+            Debug.Assert(length == LENGTH);
         }
 
         public IHDR() : base()
