@@ -161,10 +161,7 @@ namespace Masteryu.Png
 
         public override ChunkType ChunkType
         {
-            get
-            {
-                return ChunkType.IHDR;
-            }
+            get { return ChunkType.IHDR; }
         }
 
         public override byte[] Bytes

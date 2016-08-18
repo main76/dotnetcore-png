@@ -15,10 +15,7 @@ namespace Masteryu.Png
 
         public virtual string DebuggerView
         {
-            get
-            {
-                return ToString(1);
-            }
+            get { return ToString(1); }
         }
 
         /// <summary>
@@ -111,18 +108,12 @@ namespace Masteryu.Png
 
             public string Data
             {
-                get
-                {
-                    return "Nothing";
-                }
+                get { return "Nothing"; }
             }
 
             public override ChunkType ChunkType
             {
-                get
-                {
-                    return ChunkType.NULL;
-                }
+                get { return ChunkType.NULL; }
             }
 
             public override byte[] Bytes
