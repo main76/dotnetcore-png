@@ -19,7 +19,6 @@ namespace Masteryu.Extension
 
             return rtn;
         }
-
         public static string ReadString(this byte[] buf, int offset, int length, Action<char> charCheck = null)
         {
             string rtn = string.Empty;

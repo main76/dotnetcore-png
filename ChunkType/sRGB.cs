@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 
 namespace Masteryu.Png
@@ -50,6 +49,7 @@ namespace Masteryu.Png
         {
             get 
             {
+                // only for debug
                 byte b = IsReadOnly ? _buf[_offset] : data;
                 return new byte[] { b };
             }

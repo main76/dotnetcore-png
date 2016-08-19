@@ -5,7 +5,7 @@ using Masteryu.Extension;
 namespace Masteryu.Png
 {
     /// <summary>
-    /// IHDR Must be the First Chunk of a PNG File
+    /// The IHDR chunk shall be the first chunk in the PNG datastream.
     /// </summary>
     public class IHDR : ChunkData
     {
@@ -39,14 +39,9 @@ namespace Masteryu.Png
             get
             {
                 const int pos = 4;
-                if (IsReadOnly)
-                {
-                    return _buf.ReadInt(pos + _offset, 4);
-                }
-                else
-                {
-                    return bytes.ReadInt(pos, 4);
-                }
+                return IsReadOnly 
+                     ? _buf.ReadInt(pos + _offset, 4)
+                     : bytes.ReadInt(pos, 4);
             }
             set
             {
@@ -62,14 +57,7 @@ namespace Masteryu.Png
             get
             {
                 const int pos = 8;
-                if (IsReadOnly)
-                {
-                    return _buf[pos + _offset];
-                }
-                else
-                {
-                    return bytes[pos];
-                }
+                return IsReadOnly ? _buf[pos + _offset] : bytes[pos];
             }
             set
             {
@@ -82,15 +70,8 @@ namespace Masteryu.Png
         {
             get
             {
-                const int pos = 9;
-                if (IsReadOnly)
-                {
-                    return _buf[pos + _offset];
-                }
-                else
-                {
-                    return bytes[pos];
-                }
+                const int pos = 9;                
+                return IsReadOnly ? _buf[pos + _offset] : bytes[pos];
             }
             set
             {
@@ -103,15 +84,8 @@ namespace Masteryu.Png
         {
             get
             {
-                const int pos = 10;
-                if (IsReadOnly)
-                {
-                    return _buf[pos + _offset];
-                }
-                else
-                {
-                    return bytes[pos];
-                }
+                const int pos = 10;                
+                return IsReadOnly ? _buf[pos + _offset] : bytes[pos];
             }
             set
             {
@@ -125,14 +99,7 @@ namespace Masteryu.Png
             get
             {
                 const int pos = 11;
-                if (IsReadOnly)
-                {
-                    return _buf[pos + _offset];
-                }
-                else
-                {
-                    return bytes[pos];
-                }
+                return IsReadOnly ? _buf[pos + _offset] : bytes[pos];
             }
             set
             {
@@ -141,19 +108,12 @@ namespace Masteryu.Png
             }
         }
 
-        public byte InterfaceMethod
+        public byte InterlaceMethod
         {
             get
             {
                 const int pos = 12;
-                if (IsReadOnly)
-                {
-                    return _buf[pos + _offset];
-                }
-                else
-                {
-                    return bytes[pos];
-                }
+                return IsReadOnly ? _buf[pos + _offset] : bytes[pos];
             }
             set
             {
@@ -182,10 +142,8 @@ namespace Masteryu.Png
 
                     return bytes;
                 }
-                else
-                {
-                    return bytes;
-                }
+                
+                return bytes;
             }
         }
 

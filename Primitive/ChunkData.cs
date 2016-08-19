@@ -95,6 +95,8 @@ namespace Masteryu.Png
                     return new IHDR(buf, offset, length);
                 case ChunkType.sRGB:
                     return new sRGB(buf, offset, length);
+                case ChunkType.gAMA:
+                    return new gAMA(buf, offset, length);
             }
 
             return new UnknownData(buf, offset, length);
