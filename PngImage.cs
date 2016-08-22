@@ -63,5 +63,19 @@ namespace Masteryu.Png
 
             return rtn;
         }
+
+        // Only use for debug
+        public byte[] IDATBytes
+        {
+            get 
+            {
+                foreach (var chunk in chunks)
+                {
+                    if (chunk.Type == ChunkType.IDAT)
+                        return chunk.Data.Bytes;
+                }
+                throw new InvalidDataException();
+            }
+        }
     }
 }

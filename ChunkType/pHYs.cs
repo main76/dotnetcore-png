@@ -13,7 +13,7 @@ namespace Masteryu.Png
         private byte[] bytes;
         internal const int LENGTH = 9;
 
-        public enum UnitSpecifier
+        public enum UnitSpecifier : byte
         {
             Unknown = 0,
             Metre = 1
@@ -69,13 +69,13 @@ namespace Masteryu.Png
             get
             {
                 const int pos = 8;
-                int b = IsReadOnly ? _buf[pos + _offset] : bytes[pos];
+                byte b = IsReadOnly ? _buf[pos + _offset] : bytes[pos];
                 return (UnitSpecifier)b;
             }
             set
             {
                 Debug.Assert(!IsReadOnly);
-                bytes[8] = (byte)(int)value;
+                bytes[8] = (byte)value;
             }
         }
 

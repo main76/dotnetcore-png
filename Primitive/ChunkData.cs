@@ -97,6 +97,8 @@ namespace Masteryu.Png
                     return new sRGB(buf, offset, length);
                 case ChunkType.gAMA:
                     return new gAMA(buf, offset, length);
+                case ChunkType.pHYs:
+                    return new pHYs(buf, offset, length);
             }
 
             return new UnknownData(buf, offset, length);

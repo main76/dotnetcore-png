@@ -11,7 +11,7 @@ namespace Masteryu.Png
     {
         private byte data;
 
-        public enum RenderingIntent
+        public enum RenderingIntent : byte
         {
             /// <summary>For images preferring good adaptation to the output device gamut at the expense of colorimetric accuracy, such as photographs.</summary>
             Perceptual = 0,
@@ -30,13 +30,13 @@ namespace Masteryu.Png
         {
             get 
             {
-                int b = IsReadOnly ? _buf[_offset] : data;
+                byte b = IsReadOnly ? _buf[_offset] : data;
                 return (RenderingIntent)b;
             }
             set
             {
                 Debug.Assert(!IsReadOnly);
-                data = (byte)(int)value;
+                data = (byte)value;
             }
         }
 

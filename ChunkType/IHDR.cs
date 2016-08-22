@@ -80,45 +80,54 @@ namespace Masteryu.Png
             }
         }
 
+        // The byte value of CompressedMethod must be 0
         public byte CompressedMethod
         {
             get
             {
-                const int pos = 10;                
-                return IsReadOnly ? _buf[pos + _offset] : bytes[pos];
+                const int pos = 10; 
+                byte value = IsReadOnly ? _buf[pos + _offset] : bytes[pos];
+                Debug.Assert(value == 0);
+                return value;
             }
             set
             {
                 Debug.Assert(!IsReadOnly);
+                Debug.Assert(value == 0);
                 bytes[10] = value;
             }
         }
 
+        // The byte value of FilterMethod must be 0
         public byte FilterMethod
         {
             get
             {
                 const int pos = 11;
-                return IsReadOnly ? _buf[pos + _offset] : bytes[pos];
+                byte value = IsReadOnly ? _buf[pos + _offset] : bytes[pos];
+                Debug.Assert(value == 0);
+                return value;
             }
             set
             {
                 Debug.Assert(!IsReadOnly);
+                Debug.Assert(value == 0);
                 bytes[11] = value;
             }
         }
 
-        public byte InterlaceMethod
+        public Interlace InterlaceMethod
         {
             get
             {
                 const int pos = 12;
-                return IsReadOnly ? _buf[pos + _offset] : bytes[pos];
+                byte value = IsReadOnly ? _buf[pos + _offset] : bytes[pos];
+                return (Interlace)value;
             }
             set
             {
                 Debug.Assert(!IsReadOnly);
-                bytes[12] = value;
+                bytes[12] = (byte)value;
             }
         }
 
@@ -155,6 +164,13 @@ namespace Masteryu.Png
         public IHDR() : base()
         {
             bytes = new byte[LENGTH];
+        }
+
+        /// <summary>Two interlace methods are defined in this International Standard</summary>
+        public enum Interlace : byte
+        {
+            Null = 0,
+            Adam7 = 1
         }
     }
 }
