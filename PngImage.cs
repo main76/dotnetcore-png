@@ -1,5 +1,7 @@
-using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Collections.Generic;
+using Masteryu.Image;
 
 namespace Masteryu.Png
 {
@@ -22,6 +24,7 @@ namespace Masteryu.Png
                 int count = (int)fs.Length - offset;
 
                 chunkBytes = new byte[count];
+
                 fs.Read(chunkBytes, 0, count);
             }
             
@@ -31,7 +34,11 @@ namespace Masteryu.Png
 
         public PngImage()
         {
+            Bitmap bm = new Bitmap(true);
+            using (Stream s = bm.GetStream())
+            {
 
+            }
         }
 
         private void ParseChunk(int offset)

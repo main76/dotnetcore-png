@@ -9,28 +9,17 @@ namespace Masteryu.Png
     /// </summary>
     public class IHDR : ChunkData
     {
-        private byte[] bytes;
         internal const int LENGTH = 13;
 
         public int Width
         {
-            get
-            {
-                if (IsReadOnly)
-                {
-                    return _buf.ReadInt(_offset, 4);
-                }
-                else
-                {
-                    return bytes.ReadInt(0, 4);
-                }
-            }
+            get { return _buf.ReadInt(_offset, 4); }
             set
             {
                 Debug.Assert(!IsReadOnly);
                 Debug.Assert(value >= 0, "Width can not below zero!");
                 byte[] bs = ((uint)value).ToBytes();
-                Array.Copy(bs, 0, bytes, 0, 4);
+                Array.Copy(bs, 0, _buf, 0, 4);
             }
         }
 
@@ -39,16 +28,14 @@ namespace Masteryu.Png
             get
             {
                 const int pos = 4;
-                return IsReadOnly 
-                     ? _buf.ReadInt(pos + _offset, 4)
-                     : bytes.ReadInt(pos, 4);
+                return _buf.ReadInt(pos + _offset, 4);
             }
             set
             {
                 Debug.Assert(!IsReadOnly);
                 Debug.Assert(value >= 0, "Height can not below zero!");
                 byte[] bs = ((uint)value).ToBytes();
-                Array.Copy(bs, 0, bytes, 4, 4);
+                Array.Copy(bs, 0, _buf, 4, 4);
             }
         }
 
@@ -57,12 +44,12 @@ namespace Masteryu.Png
             get
             {
                 const int pos = 8;
-                return IsReadOnly ? _buf[pos + _offset] : bytes[pos];
+                return _buf[pos + _offset];
             }
             set
             {
                 Debug.Assert(!IsReadOnly);
-                bytes[8] = value;
+                _buf[8] = value;
             }
         }
 
@@ -71,12 +58,12 @@ namespace Masteryu.Png
             get
             {
                 const int pos = 9;                
-                return IsReadOnly ? _buf[pos + _offset] : bytes[pos];
+                return _buf[pos + _offset];
             }
             set
             {
                 Debug.Assert(!IsReadOnly);
-                bytes[9] = value;
+                _buf[9] = value;
             }
         }
 
@@ -86,7 +73,7 @@ namespace Masteryu.Png
             get
             {
                 const int pos = 10; 
-                byte value = IsReadOnly ? _buf[pos + _offset] : bytes[pos];
+                byte value = _buf[pos + _offset];
                 Debug.Assert(value == 0);
                 return value;
             }
@@ -94,7 +81,7 @@ namespace Masteryu.Png
             {
                 Debug.Assert(!IsReadOnly);
                 Debug.Assert(value == 0);
-                bytes[10] = value;
+                _buf[10] = value;
             }
         }
 
@@ -104,7 +91,7 @@ namespace Masteryu.Png
             get
             {
                 const int pos = 11;
-                byte value = IsReadOnly ? _buf[pos + _offset] : bytes[pos];
+                byte value = _buf[pos + _offset];
                 Debug.Assert(value == 0);
                 return value;
             }
@@ -112,7 +99,7 @@ namespace Masteryu.Png
             {
                 Debug.Assert(!IsReadOnly);
                 Debug.Assert(value == 0);
-                bytes[11] = value;
+                _buf[11] = value;
             }
         }
 
@@ -121,13 +108,13 @@ namespace Masteryu.Png
             get
             {
                 const int pos = 12;
-                byte value = IsReadOnly ? _buf[pos + _offset] : bytes[pos];
+                byte value = _buf[pos + _offset];
                 return (Interlace)value;
             }
             set
             {
                 Debug.Assert(!IsReadOnly);
-                bytes[12] = (byte)value;
+                _buf[12] = (byte)value;
             }
         }
 
@@ -143,16 +130,13 @@ namespace Masteryu.Png
                 if (IsReadOnly)
                 {
                     // only for debug
-                    if (bytes == null)
-                    {
-                        bytes = new byte[LENGTH];
-                        Array.Copy(_buf, _offset, bytes, 0, LENGTH);
-                    }
+                    byte[] bytes = new byte[LENGTH];
+                    Array.Copy(_buf, _offset, bytes, 0, LENGTH);
 
                     return bytes;
                 }
                 
-                return bytes;
+                return _buf;
             }
         }
 
@@ -161,9 +145,9 @@ namespace Masteryu.Png
             Debug.Assert(length == LENGTH);
         }
 
-        public IHDR() : base()
+        public IHDR() : base(LENGTH)
         {
-            bytes = new byte[LENGTH];
+            
         }
 
         /// <summary>Two interlace methods are defined in this International Standard</summary>

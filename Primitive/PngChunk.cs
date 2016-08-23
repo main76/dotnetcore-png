@@ -22,16 +22,11 @@ namespace Masteryu.Png
 
         public int Length
         {
-            get
+            get { return _buf.ReadInt(_offset, LENGTHBYTESCOUNT); }
+            set 
             {
-                if (IsReadOnly)
-                {
-                    return _buf.ReadInt(_offset, LENGTHBYTESCOUNT);
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
+                byte[] bytes = ((uint)value).ToBytes();
+                Array.Copy(bytes, 0, _buf, _offset, LENGTHBYTESCOUNT);
             }
         }
 
@@ -39,17 +34,15 @@ namespace Masteryu.Png
         {
             get
             {
-                if (IsReadOnly)
-                {
-                    int offset = _offset + LENGTHBYTESCOUNT;
-                    int value = _buf.ReadInt(offset, TYPEBYTESCOUNT);
+                int offset = _offset + LENGTHBYTESCOUNT;
+                int value = _buf.ReadInt(offset, TYPEBYTESCOUNT);
 
-                    return (ChunkType)value;
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
+                return (ChunkType)value;
+            }
+            set 
+            {
+                byte[] bytes = ((uint)value).ToBytes();
+                Array.Copy(bytes, 0, _buf, _offset + LENGTHBYTESCOUNT, TYPEBYTESCOUNT);
             }
         }
 
@@ -65,17 +58,15 @@ namespace Masteryu.Png
                     if (_data == null)
                         _data = ChunkData.CreatInstance(Type, _buf, _offset + HEADBYTESCOUNT, Length);
 
-                    return _data;
                 }
-                else
-                {
-                    throw new NotImplementedException();
-                }
+
+                return _data;
             }
             set
             {
                 Debug.Assert(!IsReadOnly);
-                throw new NotImplementedException();
+                Debug.Assert(Type == value.ChunkType);
+                _data = value;
             }
         }
 
@@ -94,8 +85,11 @@ namespace Masteryu.Png
         /// <summary>
         /// Use this for creating a png file
         /// </summary>
-        public PngChunk()
+        public PngChunk(ChunkData data)
         {
+            _data = data;
+            _offset = 0;
+             
             IsReadOnly = false;
         }
 

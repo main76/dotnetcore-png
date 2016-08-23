@@ -15,5 +15,10 @@ namespace Masteryu.Png
         {
             get { return null; }
         }
+
+        public IEND() : base(0)
+        {
+            
+        }
     }
 }

@@ -10,7 +10,6 @@ namespace Masteryu.Png
     /// </summary>
     public class pHYs : ChunkData
     {
-        private byte[] bytes;
         internal const int LENGTH = 9;
 
         public enum UnitSpecifier : byte
@@ -21,23 +20,13 @@ namespace Masteryu.Png
 
         public int PxPerUnitX
         {
-            get
-            {
-                if (IsReadOnly)
-                {
-                    return _buf.ReadInt(_offset, 4);
-                }
-                else
-                {
-                    return bytes.ReadInt(0, 4);
-                }
-            }
+            get { return _buf.ReadInt(_offset, 4); }
             set
             {
                 Debug.Assert(!IsReadOnly);
                 Debug.Assert(value >= 0, "PxPerUnitX can not below zero!");
                 byte[] bs = ((uint)value).ToBytes();
-                Array.Copy(bs, 0, bytes, 0, 4);
+                Array.Copy(bs, 0, _buf, _offset, 4);
             }
         }
 
@@ -46,21 +35,14 @@ namespace Masteryu.Png
             get
             {
                 const int pos = 4;
-                if (IsReadOnly)
-                {
-                    return _buf.ReadInt(pos + _offset, 4);
-                }
-                else
-                {
-                    return bytes.ReadInt(pos, 4);
-                }
+                return _buf.ReadInt(pos + _offset, 4);
             }
             set
             {
                 Debug.Assert(!IsReadOnly);
                 Debug.Assert(value >= 0, "PxPerUnitY can not below zero!");
                 byte[] bs = ((uint)value).ToBytes();
-                Array.Copy(bs, 0, bytes, 4, 4);
+                Array.Copy(bs, 0, _buf, _offset + 4, 4);
             }
         }
 
@@ -69,13 +51,13 @@ namespace Masteryu.Png
             get
             {
                 const int pos = 8;
-                byte b = IsReadOnly ? _buf[pos + _offset] : bytes[pos];
+                byte b = _buf[pos + _offset];
                 return (UnitSpecifier)b;
             }
             set
             {
                 Debug.Assert(!IsReadOnly);
-                bytes[8] = (byte)value;
+                _buf[8] = (byte)value;
             }
         }
 
@@ -91,16 +73,13 @@ namespace Masteryu.Png
                 if (IsReadOnly)
                 {
                     // only for debug
-                    if (bytes == null)
-                    {
-                        bytes = new byte[LENGTH];
-                        Array.Copy(_buf, _offset, bytes, 0, LENGTH);
-                    }
+                    byte[] bytes = new byte[LENGTH];
+                    Array.Copy(_buf, _offset, bytes, 0, LENGTH);
 
                     return bytes;
                 }
                 
-                return bytes;
+                return _buf;
             }
         }
 
@@ -109,9 +88,9 @@ namespace Masteryu.Png
             Debug.Assert(length == LENGTH);
         }
 
-        public pHYs() : base()
+        public pHYs() : base(LENGTH)
         {
-            bytes = new byte[LENGTH];
+            
         }
     }
 }

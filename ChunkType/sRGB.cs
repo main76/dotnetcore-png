@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 
 namespace Masteryu.Png
@@ -9,7 +10,7 @@ namespace Masteryu.Png
     /// </summary>
     public class sRGB : ChunkData
     {
-        private byte data;
+        private const int LENGTH = 1;
 
         public enum RenderingIntent : byte
         {
@@ -30,13 +31,13 @@ namespace Masteryu.Png
         {
             get 
             {
-                byte b = IsReadOnly ? _buf[_offset] : data;
+                byte b = _buf[_offset];
                 return (RenderingIntent)b;
             }
             set
             {
                 Debug.Assert(!IsReadOnly);
-                data = (byte)value;
+                _buf[_offset] = (byte)value;
             }
         }
 
@@ -49,18 +50,25 @@ namespace Masteryu.Png
         {
             get 
             {
-                // only for debug
-                byte b = IsReadOnly ? _buf[_offset] : data;
-                return new byte[] { b };
+                if (IsReadOnly)
+                {
+                    // only for debug
+                    byte[] bytes = new byte[LENGTH];
+                    Array.Copy(_buf, _offset, bytes, 0, LENGTH);
+
+                    return bytes;
+                }
+                
+                return _buf;
             }
         }
 
         public sRGB(byte[] buf, int offset, int length) : base(buf, offset)
         {
-            Debug.Assert(length == 1);
+            Debug.Assert(length == LENGTH);
         }
 
-        public sRGB() : base()
+        public sRGB() : base(LENGTH)
         {
             
         }

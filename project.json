@@ -2,6 +2,7 @@
   "version": "1.0.0-*",
   "buildOptions": {
     "debugType": "portable",
+    "allowUnsafe": true,
     "emitEntryPoint": true
   },
   "dependencies": {},

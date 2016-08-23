@@ -22,8 +22,10 @@ namespace Masteryu.Png
         /// <summary>
         /// Use this for creating a png file
         /// </summary>
-        public ChunkData()
+        public ChunkData(int length)
         {
+            _buf = new byte[length];
+            _offset = 0;
             IsReadOnly = false;
         }
 

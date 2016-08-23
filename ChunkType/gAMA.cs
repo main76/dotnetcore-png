@@ -10,22 +10,16 @@ namespace Masteryu.Png
     /// </summary>
     public class gAMA : ChunkData
     {
-        private byte[] bytes;
         internal const int LENGTH = 4;
 
         public int Gamma
         {
-            get 
-            {
-                int rtn = IsReadOnly 
-                         ? _buf.ReadInt(_offset, LENGTH)
-                         : bytes.ReadInt(0, LENGTH); 
-                return rtn;
-            }
+            get { return _buf.ReadInt(_offset, LENGTH); }
             set
             {
                 Debug.Assert(!IsReadOnly);
-                bytes = ((uint)value).ToBytes();
+                byte[] bytes = ((uint)value).ToBytes();
+                Array.Copy(bytes, 0, _buf, _offset, LENGTH);
             }
         }
 
@@ -41,16 +35,13 @@ namespace Masteryu.Png
                 if (IsReadOnly)
                 {
                     // only for debug
-                    if (bytes == null)
-                    {
-                        bytes = new byte[LENGTH];
-                        Array.Copy(_buf, _offset, bytes, 0, LENGTH);
-                    }
+                    byte[] bytes = new byte[LENGTH];
+                    Array.Copy(_buf, _offset, bytes, 0, LENGTH);
                     
                     return bytes;
                 }
                 
-                return bytes;
+                return _buf;
             }
         }
 
@@ -59,7 +50,7 @@ namespace Masteryu.Png
             Debug.Assert(length == LENGTH);
         }
 
-        public gAMA() : base()
+        public gAMA() : base(LENGTH)
         {
             
         }
