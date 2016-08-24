@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.IO.Compression;
+using Masteryu.Extension;
 using Masteryu.Image;
 using Masteryu.Png;
 
@@ -16,13 +17,8 @@ namespace ConsoleApplication
 
             var pi = DebugMethod(args.Length == 0 ? DEFAULTPNG : args[0]);
 
-            using (MemoryStream output = new MemoryStream())
-            using (MemoryStream input = new MemoryStream(pi.IDATBytes, 2, pi.IDATBytes.Length - 4))
+            using (Stream output = pi.IDATBytes.Decompress(2, pi.IDATBytes.Length - 6))
             {
-                using (DeflateStream ds = new DeflateStream(input, CompressionMode.Decompress))
-                    ds.CopyTo(output);
-
-                output.Position = 0;
                 while (true)
                 {
                     int value = output.ReadByte();
@@ -30,6 +26,7 @@ namespace ConsoleApplication
                         break;
                     Console.Write("{0} ", value);
                 }
+                Console.WriteLine();
             }
 
             return 0;
@@ -37,10 +34,20 @@ namespace ConsoleApplication
 
         private static PngImage DebugMethod(string pngpath)
         {
-            PngImage pi = new PngImage(new Bitmap(true));
-            Console.WriteLine(pi);
+            Color[,] colorField =  new Color[2, 3];
+            colorField[0, 0] = new Color(0);
+            colorField[0, 1] = new Color(144);
+            colorField[0, 2] = new Color(255, 55, 155);
+            colorField[1, 0] = new Color(66, 166, 23);
+            colorField[1, 1] = new Color(30, 130, 30);
+            colorField[1, 2] = new Color(255);
 
-            pi =  new PngImage(pngpath);
+            PngImage pi = new PngImage(new Bitmap(colorField, 2, 3));
+            pi.ExportPng("res4debug/export.png");
+
+            pi = new PngImage("res4debug/export.png");
+
+            // pi =  new PngImage(pngpath);
             Console.WriteLine(pi);
 
             return pi;

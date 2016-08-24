@@ -1,7 +1,7 @@
 using System.IO;
-using System.IO.Compression;
 using System.Collections.Generic;
 using Masteryu.Image;
+using Masteryu.Extension;
 
 namespace Masteryu.Png
 {
@@ -32,11 +32,9 @@ namespace Masteryu.Png
 
         public PngImage(Bitmap bm)
         {
-            // using (FileStream fs = File.Open("res4debug/test.png", FileMode.Create))
-            // using (Stream s = bm.GetStream())
-            // {
-
-            // }
+            byte[] compressed;
+            using (Stream s = bm.GetStream())
+                compressed = s.Compress();
 
             PngChunk ihdr = new PngChunk(new IHDR 
             { 
@@ -52,12 +50,14 @@ namespace Masteryu.Png
                 PxPerUnitX = 3780,
                 PxPerUnitY = 3780
             });
-            PngChunk idat = null;
+            PngChunk idat = new PngChunk(new IDAT(compressed));
             PngChunk iend = new PngChunk(new IEND());
 
             chunks.Add(ihdr);
             chunks.Add(srgb);
             chunks.Add(gama);
+            chunks.Add(phys);
+            chunks.Add(idat);
             chunks.Add(iend);
         }
 
@@ -102,6 +102,16 @@ namespace Masteryu.Png
                         return chunk.Data.Bytes;
                 }
                 throw new InvalidDataException();
+            }
+        }
+        public void ExportPng(string path)
+        {
+            using (FileStream fs = File.Create(path))
+            {
+                PngSign.Sign(fs);
+                
+                foreach (var chunk in chunks)
+                    chunk.WriteToStream(fs);
             }
         }
     }

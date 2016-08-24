@@ -56,29 +56,22 @@ namespace Masteryu.Image
         private readonly int width;
         private readonly int height;
 
-        public Bitmap(bool test)
+        public Bitmap(Color[,] colors, int w, int h)
         {
-            if (test != true)
-                return;
+            width = w;
+            height = h;
 
-            width = 2;
-            height = 3;
-
-            colorField = new Color[width, height];
-            colorField[0, 0] = new Color(0);
-            colorField[0, 1] = new Color(144);
-            colorField[1, 0] = new Color(66, 166, 23);
-            colorField[1, 1] = new Color(30, 130, 30);
+            colorField =colors;
         }
 
         public Stream GetStream()
         {
             MemoryStream ms = new MemoryStream();
-            for (int i = 0; i < width; i++)
+            for (int j = 0; j < height; j++)
             {
                 // filter type 0
                 ms.WriteByte(0);
-                for (int j = 0; j < height; j++)
+                for (int i = 0; i < width; i++)
                 {
                     foreach (var b in colorField[i, j].Buffer)
                         ms.WriteByte(b);

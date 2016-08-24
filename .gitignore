@@ -13,6 +13,9 @@ bin/
 obj/
 project.lock.json
 
+# Export *.png file
+res4debug/
+
 # VSCode Individual Launch Configuration
 .vscode/
 

@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using Masteryu.Extension;
 
 namespace Masteryu.Png
@@ -23,7 +24,7 @@ namespace Masteryu.Png
         public int Length
         {
             get { return _buf.ReadInt(_offset, LENGTHBYTESCOUNT); }
-            set 
+            private set 
             {
                 byte[] bytes = ((uint)value).ToBytes();
                 Array.Copy(bytes, 0, _buf, _offset, LENGTHBYTESCOUNT);
@@ -39,7 +40,7 @@ namespace Masteryu.Png
 
                 return (ChunkType)value;
             }
-            set 
+            private set 
             {
                 byte[] bytes = ((uint)value).ToBytes();
                 Array.Copy(bytes, 0, _buf, _offset + LENGTHBYTESCOUNT, TYPEBYTESCOUNT);
@@ -62,11 +63,16 @@ namespace Masteryu.Png
 
                 return _data;
             }
-            set
+            private set
             {
                 Debug.Assert(!IsReadOnly);
                 Debug.Assert(Type == value.ChunkType);
+                if (value.ChunkType == ChunkType.IEND)
+                    return;
+                
+                byte[] bytes = value.Bytes;
                 _data = value;
+                Array.Copy(bytes, 0, _buf, HEADBYTESCOUNT, bytes.Length);
             }
         }
 
@@ -77,8 +83,19 @@ namespace Masteryu.Png
                 int offset = _offset + LENGTHBYTESCOUNT;
                 int length = Length + TYPEBYTESCOUNT;
                 uint crcValue = Crc32Bit.Value(_buf, offset, length);
+                byte[] rtn = crcValue.ToBytes();
 
-                return crcValue.ToBytes();
+                if (IsReadOnly)
+                {
+                    offset = offset + length;
+                    for (int i = 0; i < rtn.Length; i++)
+                    {
+                        if (_buf[i + offset] != rtn[i])
+                            throw new InvalidDataException();
+                    }
+                }
+
+                return rtn;
             }
         }
 
@@ -93,18 +110,16 @@ namespace Masteryu.Png
 
             _offset = 0;
             IsReadOnly = false;
-
-            if (data.ChunkType != ChunkType.IEND)
-                _data = data;
             
             // Initialize the data keeping field _buf
-            _buf = new byte[HEADBYTESCOUNT + bytes.Length];
+            int fullLength = HEADBYTESCOUNT + bytes.Length + CRCBYTESCOUNT;
+            _buf = new byte[fullLength];
             // Set the Length
             Length = bytes.Length;
             // Set the Type
             Type = data.ChunkType;
-            // Set the Data
-            Array.Copy(bytes, 0, _buf, HEADBYTESCOUNT, bytes.Length);
+            // Set the Data 
+            Data = data;
         }
 
         /// <summary>
@@ -139,62 +154,17 @@ namespace Masteryu.Png
             return rtn;
         }
 
-        /// <summary>
-        /// Recode from Annex E's CRC-32bit algorithm using c
-        /// </summary>
-        private static class Crc32Bit
+        public void WriteToStream(Stream stream)
         {
-            [ThreadStatic]
-            private static uint[] _crcTbl = null;
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
 
-            private const int LENGTH = 256;
+            int fullLength = HEADBYTESCOUNT + CRCBYTESCOUNT + Length;
+            
+            // Set the CRC value into the buffer field
+            Array.Copy(CRC, 0, _buf, _offset + fullLength - CRCBYTESCOUNT, 4);
 
-            private static void Init()
-            {
-                lock (typeof(Crc32Bit))
-                {
-                    if (_crcTbl != null)
-                        return;
-
-                    _crcTbl = new uint[LENGTH];
-                    uint c;
-                    for (int i = 0; i < LENGTH; i++)
-                    {
-                        c = (uint)i;
-                        for (int j = 0; j < 8; j++)
-                        {
-                            if ((c & 1) == 1)
-                            {
-                                c = 0xEDB88320 ^ (c >> 1);
-                            }
-                            else
-                            {
-                                c >>= 1;
-                            }
-                        }
-                        _crcTbl[i] = c;
-                    }
-                }
-            }
-
-            public static uint Value(byte[] buf, int offset, int length)
-            {
-                uint c = 0xffffffff;
-
-                if (_crcTbl == null)
-                {
-                    Init();
-                }
-
-                for (int i = 0; i < length; i++)
-                {
-                    uint index = (c ^ buf[i + offset]) & 0xff;
-                    c = _crcTbl[index] ^ (c >> 8);
-                }
-
-                return ~c;
-            }
+            stream.Write(_buf, _offset, fullLength);
         }
     }
-
 }

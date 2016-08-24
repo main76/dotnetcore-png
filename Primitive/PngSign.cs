@@ -20,8 +20,10 @@ namespace Masteryu.Png
 
         public static void Sign(Stream stream)
         {
-            if (!stream.CanWrite)
-                throw new System.NotSupportedException(stream.GetType().Name);
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (stream.Position != 0)
+                throw new ArgumentException(nameof(stream));
 
             foreach (byte b in signature)
                 stream.WriteByte(b);
