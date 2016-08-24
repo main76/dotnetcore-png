@@ -90,7 +90,7 @@ namespace Masteryu.Png
 
         public pHYs() : base(LENGTH)
         {
-            
+            Specifier = UnitSpecifier.Metre;
         }
     }
 }

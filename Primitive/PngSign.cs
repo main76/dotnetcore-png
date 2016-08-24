@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace Masteryu.Png
@@ -16,6 +17,15 @@ namespace Masteryu.Png
             26, 
             10
         };
+
+        public static void Sign(Stream stream)
+        {
+            if (!stream.CanWrite)
+                throw new System.NotSupportedException(stream.GetType().Name);
+
+            foreach (byte b in signature)
+                stream.WriteByte(b);
+        }
 
         public static int Check(FileStream fs)
         {

@@ -2,7 +2,6 @@ namespace Masteryu.Png
 {
     /// <summary>
     /// IEND Must be the Last Chunk of a PNG File.
-    /// This class should always be 0 reference.
     /// </summary>
     public class IEND : ChunkData
     {
@@ -13,7 +12,7 @@ namespace Masteryu.Png
 
         public override byte[] Bytes
         {
-            get { return null; }
+            get { return new byte[0]; }
         }
 
         public IEND() : base(0)

@@ -50,6 +50,11 @@ namespace Masteryu.Png
             Debug.Assert(length == LENGTH);
         }
 
+        public gAMA(int gamma) : this()
+        {
+            Gamma = gamma;
+        }
+
         public gAMA() : base(LENGTH)
         {
             

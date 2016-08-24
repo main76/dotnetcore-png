@@ -11,12 +11,10 @@ namespace Masteryu.Png
     public sealed class PngImage
     {
         private readonly byte[] chunkBytes;
-        private readonly List<PngChunk> chunks;
+        private readonly List<PngChunk> chunks = new List<PngChunk>();
 
         public PngImage(string path)
         {
-            chunks = new List<PngChunk>();
-
             // Read from file
             using (FileStream fs = File.OpenRead(path))
             {
@@ -32,13 +30,35 @@ namespace Masteryu.Png
             ParseChunk(0);
         }
 
-        public PngImage()
+        public PngImage(Bitmap bm)
         {
-            Bitmap bm = new Bitmap(true);
-            using (Stream s = bm.GetStream())
-            {
+            // using (FileStream fs = File.Open("res4debug/test.png", FileMode.Create))
+            // using (Stream s = bm.GetStream())
+            // {
 
-            }
+            // }
+
+            PngChunk ihdr = new PngChunk(new IHDR 
+            { 
+                Width = 2, 
+                Height = 3,
+                BitDepth = 8,
+                ColorType = 6
+            });
+            PngChunk srgb = new PngChunk(new sRGB());
+            PngChunk gama = new PngChunk(new gAMA(45455));
+            PngChunk phys = new PngChunk(new pHYs
+            {
+                PxPerUnitX = 3780,
+                PxPerUnitY = 3780
+            });
+            PngChunk idat = null;
+            PngChunk iend = new PngChunk(new IEND());
+
+            chunks.Add(ihdr);
+            chunks.Add(srgb);
+            chunks.Add(gama);
+            chunks.Add(iend);
         }
 
         private void ParseChunk(int offset)

@@ -87,10 +87,24 @@ namespace Masteryu.Png
         /// </summary>
         public PngChunk(ChunkData data)
         {
-            _data = data;
+            byte[] bytes = data?.Bytes;
+            if (bytes == null)
+                throw new ArgumentNullException();
+
             _offset = 0;
-             
             IsReadOnly = false;
+
+            if (data.ChunkType != ChunkType.IEND)
+                _data = data;
+            
+            // Initialize the data keeping field _buf
+            _buf = new byte[HEADBYTESCOUNT + bytes.Length];
+            // Set the Length
+            Length = bytes.Length;
+            // Set the Type
+            Type = data.ChunkType;
+            // Set the Data
+            Array.Copy(bytes, 0, _buf, HEADBYTESCOUNT, bytes.Length);
         }
 
         /// <summary>

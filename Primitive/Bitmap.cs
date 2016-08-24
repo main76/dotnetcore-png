@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Masteryu.Image
 {
-    public unsafe struct Color
+    public struct Color
     {
         public byte Alpha
         {
@@ -34,7 +34,7 @@ namespace Masteryu.Image
             get { return _buf; }
         }
 
-        private byte[] _buf;
+        private readonly byte[] _buf;
 
         public Color(byte g, byte a = 255) : this(g, g, g, a)
         {
@@ -52,9 +52,9 @@ namespace Masteryu.Image
     }
     public class Bitmap
     {
-        private Color[,] colorField;
-        private int width;
-        private int height;
+        private readonly Color[,] colorField;
+        private readonly int width;
+        private readonly int height;
 
         public Bitmap(bool test)
         {

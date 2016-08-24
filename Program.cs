@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.IO.Compression;
+using Masteryu.Image;
 using Masteryu.Png;
 
 namespace ConsoleApplication
@@ -15,22 +16,12 @@ namespace ConsoleApplication
 
             var pi = DebugMethod(args.Length == 0 ? DEFAULTPNG : args[0]);
 
-            using (FileStream fs = new FileStream("binary", FileMode.Create))
-            {                
-                byte[] data = pi.IDATBytes;
-                for (int i = 2; i < data.Length - 4; i++)
-                {
-                    fs.WriteByte(data[i]);
-                }                    
-            }
-
             using (MemoryStream output = new MemoryStream())
-            using (FileStream input = new FileStream("binary", FileMode.Open))
+            using (MemoryStream input = new MemoryStream(pi.IDATBytes, 2, pi.IDATBytes.Length - 4))
             {
                 using (DeflateStream ds = new DeflateStream(input, CompressionMode.Decompress))
-                {
                     ds.CopyTo(output);
-                }
+
                 output.Position = 0;
                 while (true)
                 {
@@ -46,8 +37,12 @@ namespace ConsoleApplication
 
         private static PngImage DebugMethod(string pngpath)
         {
-            PngImage pi = new PngImage(pngpath);
-            // Console.WriteLine(pi);
+            PngImage pi = new PngImage(new Bitmap(true));
+            Console.WriteLine(pi);
+
+            pi =  new PngImage(pngpath);
+            Console.WriteLine(pi);
+
             return pi;
         }
     }
