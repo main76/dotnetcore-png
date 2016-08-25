@@ -17,7 +17,7 @@ namespace Masteryu.Png
             set
             {
                 Debug.Assert(!IsReadOnly);
-                Debug.Assert(value >= 0, "Width can not below zero!");
+                Debug.Assert(value > 0, "Width must above zero!");
                 byte[] bs = ((uint)value).ToBytes();
                 Array.Copy(bs, 0, _buf, 0, 4);
             }
@@ -33,7 +33,7 @@ namespace Masteryu.Png
             set
             {
                 Debug.Assert(!IsReadOnly);
-                Debug.Assert(value >= 0, "Height can not below zero!");
+                Debug.Assert(value > 0, "Height must above zero!");
                 byte[] bs = ((uint)value).ToBytes();
                 Array.Copy(bs, 0, _buf, 4, 4);
             }

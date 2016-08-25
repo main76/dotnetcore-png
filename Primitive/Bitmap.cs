@@ -61,23 +61,28 @@ namespace Masteryu.Image
             width = w;
             height = h;
 
-            colorField =colors;
+            colorField = colors;
         }
 
         public Stream GetStream()
         {
-            MemoryStream ms = new MemoryStream();
-            for (int j = 0; j < height; j++)
+            // MemoryStream ms = new MemoryStream();
+            // for (int j = 0; j < height; j++)
+            // {
+            //     // filter type 0
+            //     ms.WriteByte(0);
+            //     for (int i = 0; i < width; i++)
+            //     {
+            //         foreach (var b in colorField[i, j].Buffer)
+            //             ms.WriteByte(b);
+            //     }
+            // }
+            // ms.Position = 0;
+
+            MemoryStream ms = new MemoryStream(new byte[] 
             {
-                // filter type 0
-                ms.WriteByte(0);
-                for (int i = 0; i < width; i++)
-                {
-                    foreach (var b in colorField[i, j].Buffer)
-                        ms.WriteByte(b);
-                }
-            }
-            ms.Position = 0;
+                1, 0, 162, 232, 255, 136, 230, 160, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 255, 93, 23, 0, 0, 0, 0, 0
+            });
             return ms;
         }
     }

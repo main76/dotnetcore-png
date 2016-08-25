@@ -104,6 +104,7 @@ namespace Masteryu.Png
                 throw new InvalidDataException();
             }
         }
+        
         public void ExportPng(string path)
         {
             using (FileStream fs = File.Create(path))

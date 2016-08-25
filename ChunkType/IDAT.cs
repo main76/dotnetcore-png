@@ -51,7 +51,7 @@ namespace Masteryu.Png
             // compressed data
             Array.Copy(compressed, 0, _buf, _offset + 2, compressed.Length);
             // check sum
-            Array.Copy(cs.ToBytes(), 0, _buf, LENGTH - 4, 4);
+            Array.Copy(cs.ToBytes(), 0, _buf, _offset + LENGTH - 4, 4);
         }
     }
 }

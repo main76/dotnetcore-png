@@ -55,7 +55,7 @@ namespace Masteryu.Extension
         public static byte[] Compress(this Stream input)
         {
             MemoryStream compressStream = new MemoryStream();            
-            using(DeflateStream compressor = new DeflateStream(compressStream, CompressionMode.Compress))
+            using(DeflateStream compressor = new DeflateStream(compressStream, CompressionLevel.Optimal))
             {
                 input.CopyTo(compressor);
             }
